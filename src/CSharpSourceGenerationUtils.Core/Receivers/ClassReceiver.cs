@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using CSharpSourceGenerationUtils;
+using CSharpSourceGenerationUtils.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -35,7 +37,7 @@ namespace PrimaryConstructor
             }
         }
 
-        public IEnumerable<ClassGenerator> GetClassGenerators(GeneratorExecutionContext context, ReceiverToClassGeneratorConfiguration mapper)
+        public IEnumerable<ClassCodeGenerator> GetClassGenerators(GeneratorExecutionContext context, ReceiverToClassGeneratorConfiguration mapper)
         {
             return GetClassSymbols(context).Select(cls => GetBaseGenerator(cls, mapper)
             .Apply(GetMemberProcessor(cls, mapper.ProcessField))
@@ -44,7 +46,7 @@ namespace PrimaryConstructor
             );
         }
 
-        protected virtual ClassGenerator GetBaseGenerator(INamedTypeSymbol cls, ReceiverToClassGeneratorConfiguration mapper) => new()
+        protected virtual ClassCodeGenerator GetBaseGenerator(INamedTypeSymbol cls, ReceiverToClassGeneratorConfiguration mapper) => new()
         {
             Namespace = cls.ContainingNamespace.ToDisplayString(),
             ClassName = mapper.GetClassName(cls),
@@ -52,8 +54,8 @@ namespace PrimaryConstructor
             Modifiers = "public",
         };
 
-        public Func<ClassGenerator, ClassGenerator> GetMemberProcessor<TMemberSymbol>
-            (INamedTypeSymbol cls, Func<TMemberSymbol, ClassGenerator, ClassGenerator>? action) => generator =>
+        public Func<ClassCodeGenerator, ClassCodeGenerator> GetMemberProcessor<TMemberSymbol>
+            (INamedTypeSymbol cls, Func<TMemberSymbol, ClassCodeGenerator, ClassCodeGenerator>? action) => generator =>
             {
                 var memberList = cls.GetMembers().OfType<TMemberSymbol>();
                 memberList.ForEach(f => action?.Invoke(f, generator));
@@ -68,9 +70,9 @@ namespace PrimaryConstructor
         //public Action<IFieldSymbol, ClassGenerator>? ProcessField { get; set; }
         //public Action<IPropertySymbol, ClassGenerator>? ProcessProperty { get; set; }
         //public Action<IMethodSymbol, ClassGenerator>? ProcessMethod { get; set; }
-        public Func<IFieldSymbol, ClassGenerator, ClassGenerator>? ProcessField { get; set; }
-        public Func<IPropertySymbol, ClassGenerator, ClassGenerator>? ProcessProperty { get; set; }
-        public Func<IMethodSymbol, ClassGenerator, ClassGenerator>? ProcessMethod { get; set; }
+        public Func<IFieldSymbol, ClassCodeGenerator, ClassCodeGenerator>? ProcessField { get; set; }
+        public Func<IPropertySymbol, ClassCodeGenerator, ClassCodeGenerator>? ProcessProperty { get; set; }
+        public Func<IMethodSymbol, ClassCodeGenerator, ClassCodeGenerator>? ProcessMethod { get; set; }
         public List<Assembly> UsingAssemblies { get; } = new();
     }
 }

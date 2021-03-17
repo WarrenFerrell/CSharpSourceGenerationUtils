@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PrimaryConstructor
+namespace CSharpSourceGenerationUtils.Extensions
 {
     internal static class EnumerableExtensions
     {

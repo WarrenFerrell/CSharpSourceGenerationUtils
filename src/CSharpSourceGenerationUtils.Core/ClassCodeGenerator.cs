@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace PrimaryConstructor
+namespace CSharpSourceGenerationUtils
 {
-    public partial class ClassGenerator : ISourceGenerator
+    public partial class ClassCodeGenerator : ICodeGenerator
     {
         public string Modifiers { get; set; } = "public";
         public string? Inheritance { get; set; }
@@ -43,33 +43,33 @@ $@"namespace {Namespace}
             return Source;
         }
 
-        public ClassGenerator Append(string text)
+        public ClassCodeGenerator Append(string text)
         {
             ClassBodyBuilder.Append(text);
             return this;
         }
 
-        public ClassGenerator AddLine(string line)
+        public ClassCodeGenerator AddLine(string line)
         {
             ClassBodyBuilder.AppendLine(line);
             return this;
         }
 
-        public ClassGenerator BlankLine() => AddLine("");
+        public ClassCodeGenerator BlankLine() => AddLine("");
 
         /// <summary>
         /// Add line that is indented by 12 spaces
         /// </summary>
         /// <param name="line"></param>
-        public virtual ClassGenerator AddIndentedLine(string line) =>
+        public virtual ClassCodeGenerator AddIndentedLine(string line) =>
              Append("            ").AddLine(line);
 
-        public virtual ClassGenerator AddUsingDirective(Type type)
+        public virtual ClassCodeGenerator AddUsingDirective(Type type)
         {
             UsingStatements.AppendLine($"using {type.Namespace};" );
             return this;
         }
 
-        public virtual ClassGenerator Apply(Func<ClassGenerator, ClassGenerator> action) => action.Invoke(this);
+        public virtual ClassCodeGenerator Apply(Func<ClassCodeGenerator, ClassCodeGenerator> action) => action.Invoke(this);
     }
 }

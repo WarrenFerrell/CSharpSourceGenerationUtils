@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace PrimaryConstructor
+namespace CSharpSourceGenerationUtils
 {
     public class CandidateReceiver<T> : ISyntaxReceiver where T : CSharpSyntaxNode
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.CodeAnalysis;
 
-namespace PrimaryConstructor
+namespace CSharpSourceGenerationUtils
 {
     public static class NamedTypeExtensions
     {
