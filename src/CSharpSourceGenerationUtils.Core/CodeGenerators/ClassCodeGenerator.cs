@@ -7,9 +7,9 @@ namespace CSharpSourceGenerationUtils
 {
     public partial class ClassCodeGenerator : ICodeGenerator
     {
-        public string Modifiers { get; set; } = "public";
+        public string ClassModifiers { get; set; } = "public";
         public string? Inheritance { get; set; }
-        public string Namespace { get; set; } = "";
+        public string ClassNamespace { get; set; } = "";
         public string ClassName { get; set; } = "";
         public string FileName { get; set; } = "";
         
@@ -27,9 +27,9 @@ namespace CSharpSourceGenerationUtils
             var sourceBuilder = new StringBuilder()
                 .Append(UsingStatements)
                 .Append(
-$@"namespace {Namespace}
+$@"namespace {ClassNamespace}
 {{
-    {Modifiers} class {ClassName} {(Inheritance != null ? $": {Inheritance}" : "")}
+    {ClassModifiers} class {ClassName} {(Inheritance != null ? $": {Inheritance}" : "")}
     {{
 ")
             .Append(ClassBodyBuilder)

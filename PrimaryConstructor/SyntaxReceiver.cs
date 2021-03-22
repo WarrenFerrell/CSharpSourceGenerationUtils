@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace PrimaryConstructor
 {
-	internal class SyntaxReceiver : ISyntaxReceiver
+
+
+	internal partial class SyntaxReceiver : ISyntaxReceiver
     {
         public IList<ClassDeclarationSyntax> CandidateClasses { get; } = new List<ClassDeclarationSyntax>();
 
