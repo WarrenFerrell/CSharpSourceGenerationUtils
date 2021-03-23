@@ -1,9 +1,11 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using CSharp.SourceGenerationUtils.Core.CodeGenerators;
 
-namespace CSharpSourceGenerationUtils
+namespace CSharp.SourceGenerationUtils.Core
 {
     public partial class ClassCodeGenerator : ICodeGenerator
     {
@@ -69,6 +71,8 @@ $@"namespace {ClassNamespace}
             UsingStatements.AppendLine($"using {type.Namespace};" );
             return this;
         }
+
+        public virtual ClassCodeGenerator AddUsingDirectives(IEnumerable<Type> types) => types.Aggregate(this, (a, t) => a.AddUsingDirective(t));
 
         public virtual ClassCodeGenerator Apply(Func<ClassCodeGenerator, ClassCodeGenerator> action) => action.Invoke(this);
     }

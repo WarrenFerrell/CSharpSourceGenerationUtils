@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using CSharpSourceGenerationUtils;
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 
-namespace PrimaryConstructor
+namespace CSharp.SourceGenerationUtils.Core.Mappers
 {
     public interface IFinderToClassMapper
     {

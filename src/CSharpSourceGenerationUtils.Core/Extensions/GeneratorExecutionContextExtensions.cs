@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using CSharpSourceGenerationUtils;
+using CSharp.SourceGenerationUtils.Core.CodeGenerators;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 

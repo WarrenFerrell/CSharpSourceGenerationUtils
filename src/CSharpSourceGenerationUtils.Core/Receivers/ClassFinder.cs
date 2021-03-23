@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using CSharpSourceGenerationUtils;
-using CSharpSourceGenerationUtils.Extensions;
+using CSharp.SourceGenerationUtils.Core.Extensions;
+using CSharp.SourceGenerationUtils.Core.Mappers;
+using CSharp.SourceGenerationUtils.Core.Receivers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace PrimaryConstructor
+namespace CSharp.SourceGenerationUtils.Core
 {
-    public class ClassReceiver : CandidateReceiver<ClassDeclarationSyntax>
+    public class ClassFinder : CandidateReceiver<ClassDeclarationSyntax>
     {
-        public List<Type> RequiredAttributes { get; } = new List<Type>();
+        public List<Type> RequiredAttributes { get; } = new();
 
         public bool RequirePartial { get; set; }
 
