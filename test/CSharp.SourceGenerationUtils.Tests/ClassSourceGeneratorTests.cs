@@ -19,6 +19,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
 using CSharp.SourceGenerationUtils.Core;
 using CSharp.SourceGenerationUtils.Generator;
+using System.Collections.Generic;
 
 namespace CSharp.SourceGenerationUtils.Tests
 {
@@ -38,17 +39,16 @@ namespace CodeNamespace.Classes
 ";
 
         [Fact]
-        public void SimpleGeneratorTest()
+        public void NoOpMapperProducesSimpleClassWithNoBody()
         {
-            // Create the 'input' compilation that the generator will act on
+            // Arrange
             Compilation inputCompilation = CreateCompilation(SimplePartialClassCode);
-            //var generator = CSharpGeneratorDriver.Create();
 
-            var newComp = RunGenerators(inputCompilation, out var generatorDiags, new ClassSourceGenerator<ClassFinder, NoOpClassMapper>());
+            // Act
+            var newComp = RunGenerators(inputCompilation, out var generatorDiagnostics, new ClassSourceGenerator<ClassFinder, NoOpClassMapper>());
 
-            Assert.Empty(generatorDiags);
-            var diagnostics = newComp.GetDiagnostics();
-            Assert.Empty(diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error));
+            // Assert
+            AssertValidCompilation(generatorDiagnostics, newComp);
             Assert.Equal(2, newComp.SyntaxTrees.Count());
             var lastTree = newComp.SyntaxTrees.Last();
             Assert.EndsWith("Simple.Generated.cs", lastTree.FilePath);
@@ -61,25 +61,32 @@ namespace CodeNamespace.Classes
     {
     }
 }
-".Trim(), newSourceText.ToString().Trim());
+".Trim(), newSourceText.ToString().Trim().Replace("\r", ""));
 
         }
 
-        private static Compilation CreateCompilation(string source) => CSharpCompilation.Create(
+        internal static void AssertValidCompilation(IEnumerable<Diagnostic> generatorDiagnostics, Compilation newComp)
+        {
+            Assert.Empty(generatorDiagnostics);
+            var diagnostics = newComp.GetDiagnostics();
+            Assert.Empty(diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error));
+        }
+
+        internal static Compilation CreateCompilation(string source) => CSharpCompilation.Create(
             assemblyName: "compilation",
             syntaxTrees: new[] { CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Preview)) },
             references: new[] { MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) },
             options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
         );
 
-        private static GeneratorDriver CreateDriver(Compilation compilation, params ISourceGenerator[] generators) => CSharpGeneratorDriver.Create(
+        internal static GeneratorDriver CreateDriver(Compilation compilation, params ISourceGenerator[] generators) => CSharpGeneratorDriver.Create(
             generators: ImmutableArray.Create(generators),
             additionalTexts: ImmutableArray<AdditionalText>.Empty,
             parseOptions: (CSharpParseOptions)compilation.SyntaxTrees.First().Options,
             optionsProvider: null
         );
 
-        private static Compilation RunGenerators(Compilation compilation, out ImmutableArray<Diagnostic> diagnostics, params ISourceGenerator[] generators)
+        internal static Compilation RunGenerators(Compilation compilation, out ImmutableArray<Diagnostic> diagnostics, params ISourceGenerator[] generators)
         {
             CreateDriver(compilation, generators).RunGeneratorsAndUpdateCompilation(compilation, out var updatedCompilation, out diagnostics);
             return updatedCompilation;
