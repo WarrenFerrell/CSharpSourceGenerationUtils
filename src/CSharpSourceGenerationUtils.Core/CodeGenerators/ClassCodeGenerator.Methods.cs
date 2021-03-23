@@ -6,10 +6,19 @@ namespace CSharp.SourceGenerationUtils.Core
 {
     public partial class ClassCodeGenerator
     {
-        public virtual ClassCodeGenerator StartMethod(string modifiers, string type, string name, string accessors) =>
-            AddIndentedLine($"{modifiers} {type} {name} {accessors}");
+        public virtual ClassCodeGenerator StartMethod(string modifiers, string type, string name, string parameters, bool writeParentheses = true) =>
+            AddIndentedLine($"{modifiers} {type} {name}({parameters})")
+                .ApplyIf(() => writeParentheses, x => x
+                    .AddIndentedLine("{")
+                    .IncrementIndent()
+                )
+            ;
 
-        //public virtual ClassCodeGenerator AddAutoProperty(string type, string name) =>
-        //    AddProperty("public", type, name, "{ get; set; }");
+        public virtual ClassCodeGenerator EndMethod(bool writeParentheses = true) =>
+            ApplyIf(() => writeParentheses, x => x
+                .DecrementIndent()
+                .AddIndentedLine("}")
+                )
+            ;
     }
 }

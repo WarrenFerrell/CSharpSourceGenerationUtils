@@ -59,16 +59,10 @@ namespace CodeNamespace.Classes
 }");
         }
 
-        public class PropertyCopyMapper : NoOpClassMapper
+        private class PropertyCopier : NoOpClassMapper
         {
-            public override ClassCodeGenerator ProcessProperties(INamedTypeSymbol t, ClassCodeGenerator generator, IEnumerable<IPropertySymbol> properties)
-            {
-                foreach(var prop in properties)
-                {
-                    generator.AddAutoProperty(prop.Type.ToDisplayString(), prop.Name + "Copy");
-                }
-                return generator;
-            }
+            public override ClassCodeGenerator ProcessProperties(INamedTypeSymbol t, ClassCodeGenerator generator, IEnumerable<IPropertySymbol> properties) =>
+                properties.Aggregate(generator, (a, x) => a.AddAutoProperty(x.Type.ToDisplayString(), x.Name + "Copy"));
         }
 
         [Fact]
@@ -78,7 +72,7 @@ namespace CodeNamespace.Classes
             Compilation inputCompilation = CreateCompilation(SimplePartialClassCode);
 
             // Act
-            var newComp = RunGenerators(inputCompilation, out var generatorDiagnostics, new ClassSourceGenerator<ClassFinder, PropertyCopyMapper>());
+            var newComp = RunGenerators(inputCompilation, out var generatorDiagnostics, new ClassSourceGenerator<ClassFinder, PropertyCopier>());
 
             // Assert
             _ = AssertValidCompilation(generatorDiagnostics, newComp);
@@ -91,6 +85,39 @@ namespace CodeNamespace.Classes
     {
         public int IntPropCopy { get; set; }
         public string StringPropCopy { get; set; }
+    }
+}");
+        }
+
+        private class NewUsingsMapper : NoOpClassMapper
+        {
+            public NewUsingsMapper()
+            {
+                UsingTypeNamespaces.Add(typeof(List<string>));
+                UsingTypeNamespaces.Add(typeof(Encoding));
+            }
+        }
+
+        [Fact]
+        public void MapperIsAbleToAddNewUsing()
+        {
+            // Arrange
+            Compilation inputCompilation = CreateCompilation(SimplePartialClassCode);
+
+            // Act
+            var newComp = RunGenerators(inputCompilation, out var generatorDiagnostics, new ClassSourceGenerator<ClassFinder, NewUsingsMapper>());
+
+            // Assert
+            _ = AssertValidCompilation(generatorDiagnostics, newComp);
+            var newSourceText = AssertSingleGeneratedClass(newComp);
+            AssertSourceTextIsEqual(newSourceText, @"
+using System;
+using System.Collections.Generic;
+using System.Text;
+namespace CodeNamespace.Classes
+{
+    public partial class Simple
+    {
     }
 }");
         }

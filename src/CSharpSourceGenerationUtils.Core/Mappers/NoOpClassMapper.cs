@@ -14,7 +14,7 @@ namespace CSharp.SourceGenerationUtils.Core
         /// <summary>
         /// Set of Types that are contained in required assemblies. e.g. <see cref="string"/> is included by default so a `using System;` directive is added to produced <see cref="ClassCodeGenerator"/>
         /// </summary>
-        public virtual List<Type> TypeNamespaces { get; } = new() { typeof(string) };
+        public virtual List<Type> UsingTypeNamespaces { get; } = new() { typeof(string) };
         
         ///<inheritdoc/>
         public virtual string GetClassName(INamedTypeSymbol t) => $"{t.Name}";
@@ -38,7 +38,7 @@ namespace CSharp.SourceGenerationUtils.Core
             ClassName = GetClassName(cls),
             FileName = GetFileName(cls),
             ClassModifiers = "public partial",
-        }.AddUsingDirectives(TypeNamespaces.AsEnumerable())
+        }.AddUsingDirectives(UsingTypeNamespaces.AsEnumerable())
         ;
     }
 }

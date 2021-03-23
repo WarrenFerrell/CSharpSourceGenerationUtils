@@ -92,7 +92,7 @@ $@"namespace {ClassNamespace}
         /// <remarks>Useful for specifying a block of text via a literal string to write without having to indent each line individually</remarks>
         /// <param name="line">Text block.</param>
         public virtual ClassCodeGenerator AddIndentedText(string text) =>
-             Append(text.Replace("\n", $"\n{CurrentIndent}");
+             Append(text.Replace("\n", $"\n{CurrentIndent}"));
 
         public virtual ClassCodeGenerator AddUsingDirective(Type type)
         {
