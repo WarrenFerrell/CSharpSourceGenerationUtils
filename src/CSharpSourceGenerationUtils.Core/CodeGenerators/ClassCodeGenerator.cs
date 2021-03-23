@@ -9,6 +9,8 @@ namespace CSharp.SourceGenerationUtils.Core
 {
     public partial class ClassCodeGenerator : ICodeGenerator
     {
+        private const string Indent = "    ";
+
         public string ClassModifiers { get; set; } = "public";
         public string? Inheritance { get; set; }
         public string ClassNamespace { get; set; } = "";
@@ -35,9 +37,8 @@ $@"namespace {ClassNamespace}
     {{
 ")
             .Append(ClassBodyBuilder)
-            .Append(@"
-        }
-    }
+            .Append(
+@"    }
 }
 ").ToString();
             Source = sourceBuilder.ToString();
@@ -75,5 +76,7 @@ $@"namespace {ClassNamespace}
         public virtual ClassCodeGenerator AddUsingDirectives(IEnumerable<Type> types) => types.Aggregate(this, (a, t) => a.AddUsingDirective(t));
 
         public virtual ClassCodeGenerator Apply(Func<ClassCodeGenerator, ClassCodeGenerator> action) => action.Invoke(this);
+
+        public static string GetIndent(int level) => string.Concat(Enumerable.Repeat(Indent, level));
     }
 }
