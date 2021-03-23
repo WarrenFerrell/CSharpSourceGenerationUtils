@@ -23,13 +23,13 @@ namespace CSharp.SourceGenerationUtils.Core
         public virtual string GetFileName(INamedTypeSymbol t) => $"{t.Name}.Generated.cs";
 
         ///<inheritdoc/>
-        public virtual ClassCodeGenerator ProcessFields(INamedTypeSymbol t, ClassCodeGenerator gen, IEnumerable<IFieldSymbol> fields) => gen;
+        public virtual ClassCodeGenerator ProcessFields(INamedTypeSymbol t, ClassCodeGenerator generator, IEnumerable<IFieldSymbol> fields) => generator;
 
         ///<inheritdoc/>
-        public virtual ClassCodeGenerator ProcessMethods(INamedTypeSymbol t, ClassCodeGenerator gen, IEnumerable<IMethodSymbol> methos) => gen;
+        public virtual ClassCodeGenerator ProcessMethods(INamedTypeSymbol t, ClassCodeGenerator generator, IEnumerable<IMethodSymbol> methos) => generator;
 
         ///<inheritdoc/>
-        public virtual ClassCodeGenerator ProcessProperties(INamedTypeSymbol t, ClassCodeGenerator gen, IEnumerable<IPropertySymbol> properties) => gen;
+        public virtual ClassCodeGenerator ProcessProperties(INamedTypeSymbol t, ClassCodeGenerator generator, IEnumerable<IPropertySymbol> properties) => generator;
 
         ///<inheritdoc/>
         public virtual ClassCodeGenerator GetGenerator(INamedTypeSymbol cls) => new ClassCodeGenerator()
