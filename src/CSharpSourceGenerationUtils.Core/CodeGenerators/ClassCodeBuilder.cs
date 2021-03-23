@@ -7,7 +7,7 @@ using CSharp.SourceGenerationUtils.Core.CodeGenerators;
 
 namespace CSharp.SourceGenerationUtils.Core
 {
-    public partial class ClassCodeGenerator : ICodeGenerator
+    public partial class ClassCodeBuilder : ICodeGenerator
     {
         private const string IndentSize = "    ";
 
@@ -62,28 +62,28 @@ $@"namespace {ClassNamespace}
             Source = null;
         }
 
-        public ClassCodeGenerator Append(string text)
+        public ClassCodeBuilder Append(string text)
         {
             ClassBodyBuilder.Append(text);
             return this;
         }
 
-        public ClassCodeGenerator AddLine(string line)
+        public ClassCodeBuilder AddLine(string line)
         {
             ClassBodyBuilder.AppendLine(line);
             return this;
         }
 
-        public ClassCodeGenerator IncrementIndent() => AdjustIndent(1);
-        public ClassCodeGenerator DecrementIndent() => AdjustIndent(-1);
-        public ClassCodeGenerator Indent(int level = 1) => Append(GetIndent(level));
-        public ClassCodeGenerator BlankLine() => AddLine("");
+        public ClassCodeBuilder IncrementIndent() => AdjustIndent(1);
+        public ClassCodeBuilder DecrementIndent() => AdjustIndent(-1);
+        public ClassCodeBuilder Indent(int level = 1) => Append(GetIndent(level));
+        public ClassCodeBuilder BlankLine() => AddLine("");
 
         /// <summary>
         /// Add line that is indented <see cref="CurrentIndentLevel"/> times.
         /// </summary>
         /// <param name="line">Text that follows the indention.</param>
-        public virtual ClassCodeGenerator AddIndentedLine(string line) =>
+        public virtual ClassCodeBuilder AddIndentedLine(string line) =>
              Indent(CurrentIndentLevel).AddLine(line);
 
         /// <summary>
@@ -91,22 +91,22 @@ $@"namespace {ClassNamespace}
         /// </summary>
         /// <remarks>Useful for specifying a block of text via a literal string to write without having to indent each line individually</remarks>
         /// <param name="line">Text block.</param>
-        public virtual ClassCodeGenerator AddIndentedText(string text) =>
+        public virtual ClassCodeBuilder AddIndentedText(string text) =>
              Append(text.Replace("\n", $"\n{CurrentIndent}"));
 
-        public virtual ClassCodeGenerator AddUsingDirective(Type type)
+        public virtual ClassCodeBuilder AddUsingDirective(Type type)
         {
             UsingStatements.AppendLine($"using {type.Namespace};");
             return this;
         }
 
-        public virtual ClassCodeGenerator AddUsingDirectives(IEnumerable<Type> types) => types.Aggregate(this, (a, t) => a.AddUsingDirective(t));
+        public virtual ClassCodeBuilder AddUsingDirectives(IEnumerable<Type> types) => types.Aggregate(this, (a, t) => a.AddUsingDirective(t));
 
-        public virtual ClassCodeGenerator Apply(Func<ClassCodeGenerator, ClassCodeGenerator> action) => action.Invoke(this);
+        public virtual ClassCodeBuilder Apply(Func<ClassCodeBuilder, ClassCodeBuilder> action) => action.Invoke(this);
 
-        public virtual ClassCodeGenerator ApplyIf(Func<bool> condition, Func<ClassCodeGenerator, ClassCodeGenerator> action) => condition.Invoke() ? action.Invoke(this) : this;
+        public virtual ClassCodeBuilder ApplyIf(Func<bool> condition, Func<ClassCodeBuilder, ClassCodeBuilder> action) => condition.Invoke() ? action.Invoke(this) : this;
 
-        protected ClassCodeGenerator AdjustIndent(int deltaLevels)
+        protected ClassCodeBuilder AdjustIndent(int deltaLevels)
         {
             CurrentIndentLevel += deltaLevels;
             return this;

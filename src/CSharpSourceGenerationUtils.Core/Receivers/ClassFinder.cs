@@ -48,12 +48,12 @@ namespace CSharp.SourceGenerationUtils.Core
         }
 
         /// <summary>
-        /// Convert found classes into a set of <see cref="ClassCodeGenerator"/>s
+        /// Convert found classes into a set of <see cref="ClassCodeBuilder"/>s
         /// </summary>
         /// <param name="context">The generator context used for code generation</param>
         /// <param name="mapper">The <see cref="IFinderToClassMapper"/> used to map each matching class returned from <see cref="GetClassSymbols(GeneratorExecutionContext)"/> /param>
         /// <returns></returns>
-        public IEnumerable<ClassCodeGenerator> GetClassGenerators(GeneratorExecutionContext context, IFinderToClassMapper mapper, ClassCodeGenerator? generator = null) =>
+        public IEnumerable<ClassCodeBuilder> GetClassGenerators(GeneratorExecutionContext context, IFinderToClassMapper mapper, ClassCodeBuilder? generator = null) =>
             GetClassSymbols(context).Select(cls => (generator ?? mapper.GetGenerator(cls))
             .Apply(gen => mapper.ProcessFields(cls, gen, cls.GetMembers().OfType<IFieldSymbol>()))
             .Apply(gen => mapper.ProcessProperties(cls, gen, cls.GetMembers().OfType<IPropertySymbol>()))

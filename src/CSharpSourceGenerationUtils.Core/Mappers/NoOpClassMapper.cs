@@ -12,7 +12,7 @@ namespace CSharp.SourceGenerationUtils.Core
     public class NoOpClassMapper : IFinderToClassMapper
     {
         /// <summary>
-        /// Set of Types that are contained in required assemblies. e.g. <see cref="string"/> is included by default so a `using System;` directive is added to produced <see cref="ClassCodeGenerator"/>
+        /// Set of Types that are contained in required assemblies. e.g. <see cref="string"/> is included by default so a `using System;` directive is added to produced <see cref="ClassCodeBuilder"/>
         /// </summary>
         public virtual List<Type> UsingTypeNamespaces { get; } = new() { typeof(string) };
         
@@ -23,16 +23,16 @@ namespace CSharp.SourceGenerationUtils.Core
         public virtual string GetFileName(INamedTypeSymbol t) => $"{t.Name}.Generated.cs";
 
         ///<inheritdoc/>
-        public virtual ClassCodeGenerator ProcessFields(INamedTypeSymbol t, ClassCodeGenerator generator, IEnumerable<IFieldSymbol> fields) => generator;
+        public virtual ClassCodeBuilder ProcessFields(INamedTypeSymbol t, ClassCodeBuilder generator, IEnumerable<IFieldSymbol> fields) => generator;
 
         ///<inheritdoc/>
-        public virtual ClassCodeGenerator ProcessMethods(INamedTypeSymbol t, ClassCodeGenerator generator, IEnumerable<IMethodSymbol> methos) => generator;
+        public virtual ClassCodeBuilder ProcessMethods(INamedTypeSymbol t, ClassCodeBuilder generator, IEnumerable<IMethodSymbol> methos) => generator;
 
         ///<inheritdoc/>
-        public virtual ClassCodeGenerator ProcessProperties(INamedTypeSymbol t, ClassCodeGenerator generator, IEnumerable<IPropertySymbol> properties) => generator;
+        public virtual ClassCodeBuilder ProcessProperties(INamedTypeSymbol t, ClassCodeBuilder generator, IEnumerable<IPropertySymbol> properties) => generator;
 
         ///<inheritdoc/>
-        public virtual ClassCodeGenerator GetGenerator(INamedTypeSymbol cls) => new ClassCodeGenerator()
+        public virtual ClassCodeBuilder GetGenerator(INamedTypeSymbol cls) => new ClassCodeBuilder()
         {
             ClassNamespace = cls.ContainingNamespace.ToDisplayString(),
             ClassName = GetClassName(cls),

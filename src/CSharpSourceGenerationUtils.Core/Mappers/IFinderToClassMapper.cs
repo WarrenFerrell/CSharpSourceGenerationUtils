@@ -8,9 +8,9 @@ namespace CSharp.SourceGenerationUtils.Core.Mappers
         string GetClassName(INamedTypeSymbol t);
         string GetFileName(INamedTypeSymbol t);
 
-        ClassCodeGenerator GetGenerator(INamedTypeSymbol t);
-        ClassCodeGenerator ProcessFields(INamedTypeSymbol t, ClassCodeGenerator generator, IEnumerable<IFieldSymbol> fields);
-        ClassCodeGenerator ProcessProperties(INamedTypeSymbol t, ClassCodeGenerator generator, IEnumerable<IPropertySymbol> properties);
-        ClassCodeGenerator ProcessMethods(INamedTypeSymbol t, ClassCodeGenerator generator, IEnumerable<IMethodSymbol> methos);
+        ClassCodeBuilder GetGenerator(INamedTypeSymbol t);
+        ClassCodeBuilder ProcessFields(INamedTypeSymbol t, ClassCodeBuilder generator, IEnumerable<IFieldSymbol> fields);
+        ClassCodeBuilder ProcessProperties(INamedTypeSymbol t, ClassCodeBuilder generator, IEnumerable<IPropertySymbol> properties);
+        ClassCodeBuilder ProcessMethods(INamedTypeSymbol t, ClassCodeBuilder generator, IEnumerable<IMethodSymbol> methos);
     }
 }
