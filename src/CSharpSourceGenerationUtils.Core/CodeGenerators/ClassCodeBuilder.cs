@@ -41,7 +41,7 @@ namespace CSharp.SourceGenerationUtils.Core
                 .Append(
 $@"namespace {ClassNamespace}
 {{
-    {ClassModifiers} class {ClassName}{(Inheritance != null ? $" : {Inheritance}" : "")}
+    {ClassModifiers} class {ClassName}{Inheritance.IfSome(x => $" : {x}")}
     {{
 ")
             .Append(ClassBodyBuilder)
